@@ -1,6 +1,6 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "betup",
+  "description": "rational gambling",
   "version": "0.0.1",
   "engines": {
     "node": "12.x"
