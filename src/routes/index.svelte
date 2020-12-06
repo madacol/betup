@@ -7,24 +7,30 @@
 	import ShowValue from "../components/ShowValue.svelte";
 
 	let winAmount: number = 100;
-	let betAmount: number = 76;
+	let betAmount: number = 54;
 
-	let availableCapital = 10000;
-	let maxRiskChance = 0.000000000001;
+	let availableCapital = 1000;
+	let maxRiskChance = 1e-6;
 	let profitPercent = 0.02;
+
 
 	let winChance: number;
 	let maxWinChanceReached: boolean;
+	let fairWinChance: number;
+	let realProfitPercent: number;
 	$: {
-		let fairWinChance = betAmount/winAmount * (1-profitPercent);
+		let idealWinChance = betAmount/winAmount;
+		fairWinChance = idealWinChance * (1-profitPercent);
 		let maxWinChance: number;
 		{
-			let repeatedBetsCapacity = availableCapital / winAmount;
+			let riskAmount = winAmount-betAmount;
+			let repeatedBetsCapacity = availableCapital / (riskAmount);
 			maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
 		}
 		maxWinChanceReached = fairWinChance > maxWinChance;
 		if (maxWinChanceReached) {
 			winChance = maxWinChance;
+			realProfitPercent = 1 - (winChance / idealWinChance)
 			// betAmount = maxWinChance*winAmount / (1-profitPercent);
 		} else {
 			winChance = fairWinChance;
@@ -41,21 +47,33 @@
 </div>
 <div class="results" class:maxWinChanceReached>
 	<ShowValue label="Win chance" value={`${(winChance*100)||0}%`}/>
-	<br>
-	{#if maxWinChanceReached}
-		<span>
-			Max win chance reached!.
-			<br>
-			If higher, the chance of losing the "available capital" gets above the "max risk chance" below
-		</span>
-	{/if}
 </div>
 <hr>
+{#if maxWinChanceReached}
+	<div class="warning">
+		<ShowValue label="Fair win chance" value={`${(fairWinChance*100)||0}%`}/>
+		<br>
+		<ShowValue label="Profit percent" value={`${(realProfitPercent*100)||0}%`}/>
+		<br>
+		<br>
+		<span>
+			Max risk chance reached!
+			<br>
+			Win chance is now capped and below the "Fair win chance"
+			<br>
+			If higher, the chance of losing the "available capital" gets above the "max risk chance" configured below
+		</span>
+	</div>
+{/if}
 <div class="settings">
 	<div class="input"><InputNumber bind:value={availableCapital} label="Available capital"/></div>
 	<div class="input"><InputNumber bind:value={maxRiskChance} step="any" label="Max risk chance"/></div>
 	<div class="input"><InputNumber bind:value={profitPercent} step="0.01" label="Profit percent"/></div>
 </div>
+{#if maxWinChanceReached}
+	<div class="warning">
+	</div>
+{/if}
 
 <style>
 	h1 {
@@ -71,6 +89,9 @@
 	}
 	.results.maxWinChanceReached {
 		background-color: rgb(255, 136, 136);
+	}
+	.warning {
+		background-color: rgb(185, 185, 185);
 	}
 	.input {
 		margin: 0.5em;
