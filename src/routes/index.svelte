@@ -14,11 +14,14 @@
 	let profitPercent = 0.02;
 
 	let winChance: number;
+	let isIdealBet: boolean;
 	$: {
 		let idealWinChance = betAmount/winAmount * (1-profitPercent);
 		let repeatedBetsCapacity = availableCapital / winAmount;
 		let maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
-		winChance = Math.min(idealWinChance, maxWinChance);
+
+		isIdealBet = idealWinChance <= maxWinChance;
+		winChance = isIdealBet ? idealWinChance : maxWinChance;
 	}
 
 </script>
@@ -29,8 +32,16 @@
 	<div class="input"><InputNumber bind:value={winAmount} label="How much you'd like to win?"/></div>
 	<div class="input"><InputNumber bind:value={betAmount} label="How much you'd like to bet?"/></div>
 </div>
-<div class="results">
+<div class="results" class:isIdealBet>
 	<ShowValue label="Win chance" value={`${(winChance*100)||0}%`}/>
+	<br>
+	{#if !isIdealBet}
+		<span>
+			Max win chance arrived!.
+			<br>
+			If higher, the chance of losing the "available capital" gets above the "max risk chance" below
+		</span>
+	{/if}
 </div>
 <hr>
 <div class="settings">
@@ -47,6 +58,12 @@
 	.sequentialInputs,
 	.settings {
 		display: grid;
+	}
+	.results{
+		background-color: rgb(255, 136, 136);
+	}
+	.results.isIdealBet {
+		background-color: rgb(129, 255, 129);
 	}
 	.input {
 		margin: 0.5em;
