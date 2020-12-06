@@ -1,41 +1,52 @@
-<style>
-	h1, figure, p {
-		text-align: center;
-		margin: 0 auto;
-	}
-
-	h1 {
-		font-size: 2.8em;
-		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
-	}
-
-	figure {
-		margin: 0 0 1em 0;
-	}
-
-	img {
-		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
-	}
-
-	p {
-		margin: 1em auto;
-	}
-
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
-		}
-	}
-</style>
-
 <svelte:head>
 	<title>Sapper project template</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<script lang="ts">
+	import InputNumber from "../components/InputNumber.svelte";
+	import ShowValue from "../components/ShowValue.svelte";
 
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
+	let winAmount: number = 100;
+	let betAmount: number = 10;
+
+	let availableCapital = 10000;
+	let maxRiskChance = 0.00001;
+
+	let winChance: number;
+	$: {
+		let idealWinChance = betAmount/winAmount;
+		let repeatedBetsCapacity = availableCapital / winAmount;
+		let maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
+		winChance = Math.min(idealWinChance, maxWinChance);
+	}
+
+</script>
+
+<h1>Bet Up!</h1>
+
+<div class="sequentialInputs">
+	<div class="input"><InputNumber bind:value={winAmount} label="How much you'd like to win?"/></div>
+	<div class="input"><InputNumber bind:value={betAmount} label="How much you'd like to bet?"/></div>
+</div>
+<div class="results">
+	<ShowValue label="Win chance" value={`${(winChance*100)||0}%`}/>
+</div>
+<hr>
+<div class="settings">
+	<div class="input"><InputNumber bind:value={availableCapital} label="Available capital"/></div>
+	<div class="input"><InputNumber bind:value={maxRiskChance} label="Max risk chance"/></div>
+</div>
+
+<style>
+	h1 {
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	.sequentialInputs,
+	.settings {
+		display: grid;
+	}
+	.input {
+		margin: 0.5em;
+	}
+</style>
