@@ -44,7 +44,7 @@
 	<br>
 	{#if maxWinChanceReached}
 		<span>
-			Max win chance arrived!.
+			Max win chance reached!.
 			<br>
 			If higher, the chance of losing the "available capital" gets above the "max risk chance" below
 		</span>
