@@ -7,7 +7,7 @@
 	import ShowValue from "../components/ShowValue.svelte";
 
 	let winAmount: number = 100;
-	let betAmount: number = 10;
+	let betAmount: number = 76;
 
 	let availableCapital = 10000;
 	let maxRiskChance = 0.000000000001;
