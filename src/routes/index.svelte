@@ -25,7 +25,7 @@
 		maxWinChanceReached = fairWinChance > maxWinChance;
 		if (maxWinChanceReached) {
 			winChance = maxWinChance;
-			betAmount = maxWinChance*winAmount / (1-profitPercent);
+			// betAmount = maxWinChance*winAmount / (1-profitPercent);
 		} else {
 			winChance = fairWinChance;
 		}
