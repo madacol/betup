@@ -14,14 +14,21 @@
 	let profitPercent = 0.02;
 
 	let winChance: number;
-	let isIdealBet: boolean;
+	let maxWinChanceReached: boolean;
 	$: {
-		let idealWinChance = betAmount/winAmount * (1-profitPercent);
-		let repeatedBetsCapacity = availableCapital / winAmount;
-		let maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
-
-		isIdealBet = idealWinChance <= maxWinChance;
-		winChance = isIdealBet ? idealWinChance : maxWinChance;
+		let fairWinChance = betAmount/winAmount * (1-profitPercent);
+		let maxWinChance: number;
+		{
+			let repeatedBetsCapacity = availableCapital / winAmount;
+			maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
+		}
+		maxWinChanceReached = fairWinChance > maxWinChance;
+		if (maxWinChanceReached) {
+			winChance = maxWinChance;
+			betAmount = maxWinChance*winAmount / (1-profitPercent);
+		} else {
+			winChance = fairWinChance;
+		}
 	}
 
 </script>
@@ -32,10 +39,10 @@
 	<div class="input"><InputNumber bind:value={winAmount} label="How much you'd like to win?"/></div>
 	<div class="input"><InputNumber bind:value={betAmount} label="How much you'd like to bet?"/></div>
 </div>
-<div class="results" class:isIdealBet>
+<div class="results" class:maxWinChanceReached>
 	<ShowValue label="Win chance" value={`${(winChance*100)||0}%`}/>
 	<br>
-	{#if !isIdealBet}
+	{#if maxWinChanceReached}
 		<span>
 			Max win chance arrived!.
 			<br>
@@ -59,11 +66,11 @@
 	.settings {
 		display: grid;
 	}
-	.results{
-		background-color: rgb(255, 136, 136);
-	}
-	.results.isIdealBet {
+	.results {
 		background-color: rgb(129, 255, 129);
+	}
+	.results.maxWinChanceReached {
+		background-color: rgb(255, 136, 136);
 	}
 	.input {
 		margin: 0.5em;
