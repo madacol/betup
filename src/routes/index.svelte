@@ -10,7 +10,7 @@
 	let betAmount: number = 10;
 
 	let availableCapital = 10000;
-	let maxRiskChance = 0.00001;
+	let maxRiskChance = 0.000000000001;
 
 	let winChance: number;
 	$: {
