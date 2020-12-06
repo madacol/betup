@@ -35,8 +35,8 @@
 <hr>
 <div class="settings">
 	<div class="input"><InputNumber bind:value={availableCapital} label="Available capital"/></div>
-	<div class="input"><InputNumber bind:value={maxRiskChance} label="Max risk chance"/></div>
-	<div class="input"><InputNumber bind:value={profitPercent} label="Profit percent"/></div>
+	<div class="input"><InputNumber bind:value={maxRiskChance} step="any" label="Max risk chance"/></div>
+	<div class="input"><InputNumber bind:value={profitPercent} step="0.01" label="Profit percent"/></div>
 </div>
 
 <style>
