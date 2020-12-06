@@ -11,10 +11,11 @@
 
 	let availableCapital = 10000;
 	let maxRiskChance = 0.000000000001;
+	let profitPercent = 0.02;
 
 	let winChance: number;
 	$: {
-		let idealWinChance = betAmount/winAmount;
+		let idealWinChance = betAmount/winAmount * (1-profitPercent);
 		let repeatedBetsCapacity = availableCapital / winAmount;
 		let maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
 		winChance = Math.min(idealWinChance, maxWinChance);
@@ -35,6 +36,7 @@
 <div class="settings">
 	<div class="input"><InputNumber bind:value={availableCapital} label="Available capital"/></div>
 	<div class="input"><InputNumber bind:value={maxRiskChance} label="Max risk chance"/></div>
+	<div class="input"><InputNumber bind:value={profitPercent} label="Profit percent"/></div>
 </div>
 
 <style>
