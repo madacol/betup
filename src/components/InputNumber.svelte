@@ -16,15 +16,20 @@
 <style>
 
 label {
+    font-size: 1.5em;
     display: flex;
     justify-content: center;
-    flex-direction: row-reverse;
+    flex-direction: column-reverse;
     align-items: center;
+}
+input {
+    font-size: 1em;
 }
 
 span {
     flex-grow: 1;
     text-align: end;
+    margin-bottom: 0.5em;
 }
 
 input {

@@ -3,16 +3,17 @@
 </svelte:head>
 
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import InputNumber from "../components/InputNumber.svelte";
 	import ShowValue from "../components/ShowValue.svelte";
 
-	let winAmount: number = 100;
-	let betAmount: number = 54;
+	let winAmount: number;
+	let betAmount: number;
 
 	let availableCapital = 1000;
 	let maxRiskChance = 1e-6;
 	let profitPercent = 0.02;
-
 
 	let winChance: number;
 	let maxWinChanceReached: boolean;
@@ -37,23 +38,51 @@
 		}
 	}
 
+	let isMounted = false;
+	onMount(()=>isMounted=true)
+
+	function getPercentageString (probability) {
+		const percentage = (probability*100)||0;
+		return `${percentage}%`;
+	}
 </script>
 
-<h1>Bet Up!</h1>
 
-<div class="sequentialInputs">
-	<div class="input"><InputNumber bind:value={winAmount} label="How much you'd like to win?"/></div>
-	<div class="input"><InputNumber bind:value={betAmount} label="How much you'd like to bet?"/></div>
+<div id="screenSize">
+	<h1>Bet Up!</h1>
+
+	<div class="sequentialAppearingElements">
+		{#if isMounted}
+			<div in:fade>
+				<InputNumber
+					bind:value={payAmount}
+					label="How much you'd like to win?"
+				/>
+			</div>
+		{/if}
+		{#if winAmount}
+			<div transition:fade>
+				<InputNumber
+					bind:value={betAmount}
+					label="How much you'd like to bet?"
+				/>
+			</div>
+		{/if}
+		{#if winChance}
+			<div transition:fade class="results" class:maxWinChanceReached>
+				<ShowValue label="Win chance" value={getPercentageString(winChance)}/>
+			</div>
+		{/if}
+	</div>
 </div>
-<div class="results" class:maxWinChanceReached>
-	<ShowValue label="Win chance" value={`${(winChance*100)||0}%`}/>
-</div>
+
 <hr>
+
 {#if maxWinChanceReached}
 	<div class="warning">
-		<ShowValue label="Fair win chance" value={`${(fairWinChance*100)||0}%`}/>
+		<ShowValue label="Fair win chance" value={getPercentageString(fairWinChance)}/>
 		<br>
-		<ShowValue label="Profit percent" value={`${(realProfitPercent*100)||0}%`}/>
+		<ShowValue label="Profit percent" value={getPercentageString(realProfitPercent)}/>
 		<br>
 		<br>
 		<span>
@@ -72,13 +101,26 @@
 </div>
 
 <style>
+	#screenSize {
+		display: grid;
+		grid-template-rows: 10em auto 10em;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		min-height: 100vh;
+	}
 	h1 {
 		text-align: center;
-		margin-bottom: 1em;
+		font-size: 5em;
+		margin-top: 1em;
+		margin-bottom: 0.5em;
 	}
-	.sequentialInputs,
+	.sequentialAppearingElements,
 	.settings {
 		display: grid;
+		align-items: center;
+		grid-template-rows: 1fr 1fr auto;
+		gap: 2em;
 	}
 	.results {
 		background-color: rgb(129, 255, 129);
@@ -88,8 +130,5 @@
 	}
 	.warning {
 		background-color: rgb(185, 185, 185);
-	}
-	.input {
-		margin: 0.5em;
 	}
 </style>
