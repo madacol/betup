@@ -5,6 +5,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import { tweened } from 'svelte/motion';
+
 	import InputNumber from "../components/InputNumber.svelte";
 	import ShowValue from "../components/ShowValue.svelte";
 
@@ -39,6 +41,9 @@
 		}
 	}
 
+	const winChanceProgress = tweened(0);
+	$: $winChanceProgress = winChance || 0;
+
 	let isMounted = false;
 	onMount(()=>isMounted=true)
 
@@ -71,7 +76,8 @@
 		{/if}
 		{#if winChance}
 			<div transition:fade class="results" class:maxWinChanceReached>
-				<ShowValue label="Win chance" value={getPercentageString(winChance)}/>
+				<ShowValue label="Win chance" value={getPercentageString($winChanceProgress)}/>
+				<progress value={$winChanceProgress} />
 			</div>
 		{/if}
 	</div>
@@ -120,10 +126,11 @@
 	.settings {
 		display: grid;
 		align-items: center;
-		grid-template-rows: 1fr 1fr auto;
+		grid-template-rows: 1fr 1fr 1fr;
 		gap: 2em;
 	}
 	.results {
+		display: grid;
 		background-color: rgb(129, 255, 129);
 	}
 	.results.maxWinChanceReached {
