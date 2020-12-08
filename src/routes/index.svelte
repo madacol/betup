@@ -8,10 +8,10 @@
 	import InputNumber from "../components/InputNumber.svelte";
 	import ShowValue from "../components/ShowValue.svelte";
 
-	let winAmount: number;
+	let payAmount: number;
 	let betAmount: number;
 
-	let availableCapital = 1000;
+	let availableCapital = 10000;
 	let maxRiskChance = 1e-6;
 	let profitPercent = 0.02;
 
@@ -20,12 +20,13 @@
 	let fairWinChance: number;
 	let realProfitPercent: number;
 	$: {
-		let idealWinChance = betAmount/winAmount;
+		let idealWinChance = betAmount/payAmount;
 		fairWinChance = idealWinChance * (1-profitPercent);
+
 		let maxWinChance: number;
 		{
-			let riskAmount = winAmount-betAmount;
-			let repeatedBetsCapacity = availableCapital / (riskAmount);
+			let netWinAmount = payAmount-betAmount;
+			let repeatedBetsCapacity = availableCapital / (netWinAmount);
 			maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
 		}
 		maxWinChanceReached = fairWinChance > maxWinChance;
@@ -60,7 +61,7 @@
 				/>
 			</div>
 		{/if}
-		{#if winAmount}
+		{#if payAmount}
 			<div transition:fade>
 				<InputNumber
 					bind:value={betAmount}
