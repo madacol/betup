@@ -66,14 +66,10 @@
 	</div>
 {/if}
 <div class="settings">
-	<div class="input"><InputNumber bind:value={availableCapital} label="Available capital"/></div>
-	<div class="input"><InputNumber bind:value={maxRiskChance} step="any" label="Max risk chance"/></div>
-	<div class="input"><InputNumber bind:value={profitPercent} step="0.01" label="Profit percent"/></div>
+	<div><InputNumber bind:value={availableCapital} label="Available capital"/></div>
+	<div><InputNumber bind:value={maxRiskChance} label="Max risk chance" step="any"/></div>
+	<div><InputNumber bind:value={profitPercent} label="Profit percent" step="0.01"/></div>
 </div>
-{#if maxWinChanceReached}
-	<div class="warning">
-	</div>
-{/if}
 
 <style>
 	h1 {
