@@ -10,40 +10,55 @@
 	import InputNumber from "../components/InputNumber.svelte";
 	import ShowValue from "../components/ShowValue.svelte";
 
-	let payAmount: number;
+	/**
+	 * User inputs
+	 */
+	let netWinAmount: number;
 	let betAmount: number;
 
+	/**
+	 * Server parameters
+	 */
 	let availableCapital = 10000;
 	let maxRiskChance = 1e-6;
 	let profitPercent = 0.02;
 
-	let winChance: number;
-	let maxWinChanceReached: boolean;
-	let fairWinChance: number;
-	let realProfitPercent: number;
-	$: {
-		let idealWinChance = betAmount/payAmount;
-		fairWinChance = idealWinChance * (1-profitPercent);
+	/**
+	 * Update calculations
+	 */
+	$: payAmount = netWinAmount+betAmount;
+	$: idealWinChance = betAmount/payAmount;
+	$: fairWinChance = idealWinChance * (1-profitPercent);
 
-		let maxWinChance: number;
-		{
-			let netWinAmount = payAmount-betAmount;
-			let repeatedBetsCapacity = availableCapital / (netWinAmount);
-			maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
-		}
-		maxWinChanceReached = fairWinChance > maxWinChance;
-		if (maxWinChanceReached) {
-			winChance = maxWinChance;
-			realProfitPercent = 1 - (winChance / idealWinChance)
-			// betAmount = maxWinChance*winAmount / (1-profitPercent);
-		} else {
-			winChance = fairWinChance;
-		}
+	let maxWinChance: number;
+	$: {
+		let repeatedBetsCapacity = availableCapital / (netWinAmount);
+		maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
+	}
+	$: maxWinChanceReached = fairWinChance > maxWinChance;
+
+	let winChance: number;
+	let realProfitPercent: number;
+	$: if (maxWinChanceReached) {
+		winChance = maxWinChance;
+		realProfitPercent = 1 - (winChance / idealWinChance)
+		/**
+		 * Put a limit to the betAmount when this condition happens
+		 */
+		// betAmount = maxWinChance*winAmount / (1-profitPercent);
+	} else {
+		winChance = fairWinChance;
 	}
 
+	/**
+	 * `winChance` with smoothing motion
+	 */
 	const winChanceProgress = tweened(0);
 	$: $winChanceProgress = winChance || 0;
 
+	/**
+	 * Trigger fade-in transition on mounting
+	 */
 	let isMounted = false;
 	onMount(()=>isMounted=true)
 
@@ -61,12 +76,12 @@
 		{#if isMounted}
 			<div in:fade>
 				<InputNumber
-					bind:value={payAmount}
+					bind:value={netWinAmount}
 					label="How much you'd like to win?"
 				/>
 			</div>
 		{/if}
-		{#if payAmount}
+		{#if netWinAmount}
 			<div transition:fade>
 				<InputNumber
 					bind:value={betAmount}
