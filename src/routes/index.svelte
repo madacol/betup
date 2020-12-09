@@ -81,6 +81,7 @@
 					bind:value={netWinAmount}
 					label="How much you'd like to win?"
 					autofocus
+					min="0"
 				/>
 			</div>
 		{/if}
@@ -89,6 +90,7 @@
 				<InputNumber
 					bind:value={betAmount}
 					label="How much you'd like to bet?"
+					min="0"
 				/>
 			</div>
 		{/if}
