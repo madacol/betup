@@ -48,6 +48,7 @@
 		// betAmount = maxWinChance*netWinAmount / (1-profitPercent);
 	} else {
 		winChance = fairWinChance;
+		realProfitPercent = profitPercent;
 	}
 
 	/**
