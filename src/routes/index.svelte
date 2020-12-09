@@ -45,7 +45,7 @@
 		/**
 		 * Put a limit to the betAmount when this condition happens
 		 */
-		// betAmount = maxWinChance*winAmount / (1-profitPercent);
+		// betAmount = maxWinChance*netWinAmount / (1-profitPercent);
 	} else {
 		winChance = fairWinChance;
 	}
@@ -118,9 +118,9 @@
 	</div>
 {/if}
 <div class="settings">
-	<div><InputNumber bind:value={availableCapital} label="Available capital"/></div>
-	<div><InputNumber bind:value={maxRiskChance} label="Max risk chance" step="any"/></div>
-	<div><InputNumber bind:value={profitPercent} label="Profit percent" step="0.01"/></div>
+	<InputNumber bind:value={availableCapital} label="Available capital"/>
+	<InputNumber bind:value={maxRiskChance} label="Max risk chance" step="any"/>
+	<InputNumber bind:value={profitPercent} label="Profit percent" step="0.01"/>
 </div>
 
 <style>
