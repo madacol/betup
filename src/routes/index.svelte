@@ -4,7 +4,7 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { tweened } from 'svelte/motion';
 
 	import InputNumber from "../components/InputNumber.svelte";
@@ -92,9 +92,13 @@
 			</div>
 		{/if}
 		{#if winChance}
-			<div transition:fade class="results" class:maxWinChanceReached>
-				<ShowValue label="Win chance" value={getPercentageString($winChanceProgress)}/>
-				<progress value={$winChanceProgress} />
+			<div transition:fade>
+				<div transition:slide class="offer">
+					<div title={$winChanceProgress.toString()} class="grid">
+						<ShowValue label="Win chance" value={getPercentageString($winChanceProgress)}/>
+						<progress value={$winChanceProgress} />
+					</div>
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -127,7 +131,7 @@
 <style>
 	#screenSize {
 		display: grid;
-		grid-template-rows: 10em auto 10em;
+		grid-template-rows: 10em auto;
 		align-items: center;
 		justify-content: center;
 		width: 100%;
@@ -143,15 +147,18 @@
 	.settings {
 		display: grid;
 		align-items: center;
-		grid-template-rows: 1fr 1fr 1fr;
+		grid-template-rows: 1fr 1fr auto;
 		gap: 2em;
+		font-size: 1.5em;
+		transition-duration: 1s;
 	}
-	.results {
+	.offer {
 		display: grid;
-		background-color: rgb(129, 255, 129);
+		gap: 2em;
+		text-align: center;
 	}
-	.results.maxWinChanceReached {
-		background-color: rgb(255, 136, 136);
+	.grid {
+		display: grid;
 	}
 	.warning {
 		background-color: rgb(185, 185, 185);

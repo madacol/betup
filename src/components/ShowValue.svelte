@@ -3,9 +3,11 @@
     export let label: string;
 </script>
 
-<span>{label}:</span>
+<h4>{label}</h4>
 <span>{value}</span>
 
 <style>
-
+    span {
+        font-size: 1.5em;
+    }
 </style>

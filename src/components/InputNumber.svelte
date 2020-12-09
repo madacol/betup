@@ -16,7 +16,6 @@
 <style>
 
 label {
-    font-size: 1.5em;
     display: flex;
     justify-content: center;
     flex-direction: column-reverse;
