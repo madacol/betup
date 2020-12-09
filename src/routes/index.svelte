@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>Bet Up!</title>
 </svelte:head>
 
 <script lang="ts">
