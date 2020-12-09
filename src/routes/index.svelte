@@ -78,6 +78,7 @@
 				<InputNumber
 					bind:value={netWinAmount}
 					label="How much you'd like to win?"
+					autofocus
 				/>
 			</div>
 		{/if}
