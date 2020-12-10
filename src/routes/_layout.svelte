@@ -1,10 +1,10 @@
 <style>
 	main {
+		font-size: calc(0.8vw + 12px);
 		position: relative;
-		max-width: 56em;
+		max-width: 25em;
 		background-color: white;
 		margin: 0 auto;
-		box-sizing: border-box;
 	}
 </style>
 

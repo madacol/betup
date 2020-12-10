@@ -63,6 +63,13 @@
 	let isMounted = false;
 	onMount(()=>isMounted=true)
 
+	/**
+	 * Bet management
+	 */
+	let betAccepted=false;
+	function acceptBet() {betAccepted=true;}
+	function unacceptBet() {betAccepted=false;}
+
 	function getPercentageString (probability) {
 		const roundedProbability = Math.floor(probability*10000)/10000
 		const percentage = (roundedProbability*100).toFixed(2)||0;
@@ -72,34 +79,55 @@
 
 
 <div id="screenSize">
-	<h1>Bet Up!</h1>
 
-	<div class="sequentialAppearingElements">
-		{#if isMounted}
-			<div in:fade>
-				<InputNumber
-					bind:value={netWinAmount}
-					label="How much you'd like to win?"
-					autofocus
-					min="0"
-				/>
+	<div id="body">
+		<h1>Bet Up!</h1>
+		{#if !betAccepted}
+			<div transition:slide class="makeBet">
+				{#if isMounted}
+					<div in:fade|local>
+						<InputNumber
+							bind:value={netWinAmount}
+							label="How much you'd like to win?"
+							autofocus
+							min="0"
+						/>
+					</div>
+				{/if}
+				{#if netWinAmount}
+					<div transition:fade|local>
+						<InputNumber
+							bind:value={betAmount}
+							label="How much you'd like to bet?"
+							min="0"
+						/>
+					</div>
+				{/if}
+				{#if netWinAmount && winChance}
+					<div transition:fade|local>
+						<div transition:slide|local class="bet-offer">
+							<div title={$winChanceProgress.toString()} class="simple-grid">
+								<ShowValue label="Win chance" value={getPercentageString($winChanceProgress)}/>
+								<progress value={$winChanceProgress} />
+							</div>
+							<button on:click={acceptBet}>Accept Bet</button>
+						</div>
+					</div>
+				{/if}
 			</div>
-		{/if}
-		{#if netWinAmount}
-			<div transition:fade>
-				<InputNumber
-					bind:value={betAmount}
-					label="How much you'd like to bet?"
-					min="0"
-				/>
-			</div>
-		{/if}
-		{#if winChance}
-			<div transition:fade>
-				<div transition:slide class="offer">
-					<div title={$winChanceProgress.toString()} class="grid">
-						<ShowValue label="Win chance" value={getPercentageString($winChanceProgress)}/>
-						<progress value={$winChanceProgress} />
+		{:else}
+			<div transition:slide|local>
+				<div transition:fade|local>
+					<h1>Overview</h1>
+					<div class="overview-bet">
+						<span>Win chance:</span>{getPercentageString(winChance)}
+						<span>We pay:</span>{payAmount}
+						<span>You pay:</span>{betAmount}
+					</div>
+					<div class="payment">
+						<h4>Pay to</h4>
+						<code>bc1testtesttesttesttesttesttesttesttesttes</code>
+						<button on:click={unacceptBet}>Go back</button>
 					</div>
 				</div>
 			</div>
@@ -133,36 +161,53 @@
 
 <style>
 	#screenSize {
+		padding: 2em;
 		display: grid;
-		grid-template-rows: 10em auto;
 		align-items: center;
-		justify-content: center;
+		justify-content: stretch;
+		text-align: center;
+		box-sizing: border-box;
 		width: 100%;
 		min-height: 100vh;
 	}
-	h1 {
-		text-align: center;
-		font-size: 5em;
-		margin-top: 1em;
-		margin-bottom: 0.5em;
+	#body {
+		width: 100%;
 	}
-	.sequentialAppearingElements,
+	#body > h1 {
+		font-size: 3em;
+	}
+	.makeBet,
 	.settings {
 		display: grid;
 		align-items: center;
 		grid-template-rows: 1fr 1fr auto;
 		gap: 2em;
-		font-size: 1.5em;
 		transition-duration: 1s;
 	}
-	.offer {
+	.bet-offer {
 		display: grid;
 		gap: 2em;
-		text-align: center;
 	}
-	.grid {
+	.simple-grid {
 		display: grid;
 	}
+	.overview-bet {
+		display: grid;
+		grid-template-columns: auto auto;
+		text-align: start;
+		column-gap: 1em;
+		font-size: 1.3em;
+	}
+	.overview-bet > span{
+		text-align: end;
+	}
+	.payment {
+		margin-top: 2em;
+		display: grid;
+		gap: 1em;
+	}
+	.payment > h4 {margin: 0;}
+	.payment > code {font-size: 0.7em;}
 	.warning {
 		background-color: rgb(185, 185, 185);
 	}
