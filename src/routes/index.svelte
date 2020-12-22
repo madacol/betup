@@ -113,6 +113,7 @@ import WinChancePreview from '../components/WinChancePreview.svelte';
 		width: 100%;
 		min-height: 100vh;
 		--winColorLight: lightgreen;
+		--loseColorLight: lightgray;
 	}
 	#body {
 		width: 100%;

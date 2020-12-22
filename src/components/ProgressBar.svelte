@@ -24,10 +24,16 @@
         width: 100%;
         height: 100%;
         color: var(--winColorLight);
+        background-color: var(--loseColorLight);
         border: 0;
     }
-    progress::-webkit-progress-value,
     progress::-moz-progress-bar {
         background-color: var(--winColorLight);
+    }
+    progress::-webkit-progress-value {
+        background-color: var(--winColorLight);
+    }
+    progress::-webkit-progress-bar {
+        background-color: var(--loseColorLight);
     }
 </style>
