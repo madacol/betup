@@ -5,9 +5,8 @@
 <script lang="ts">
 import { fade, slide } from 'svelte/transition';
 import BetInputs from '../components/BetInputs.svelte';
-import WinChancePreview from '../components/WinChancePreview.svelte';
-import Overview from '../components/Overview.svelte';
 import ServerPlayground from '../components/ServerPlayground.svelte';
+import WinChancePreview from '../components/WinChancePreview.svelte';
 
 	/**
 	 * User inputs
@@ -63,30 +62,29 @@ import ServerPlayground from '../components/ServerPlayground.svelte';
 
 	<div id="body">
 		<h1>Bet Up!</h1>
-		{#if !betAccepted}
-			<div transition:slide class="makeBet">
-				<BetInputs
-					bind:netWinAmount
-					bind:betAmount
-				/>
-				{#if netWinAmount && winChance}
-					<div transition:fade|local>
-						<div transition:slide|local>
-							<WinChancePreview {winChance}/>
-							<button on:click={acceptBet}>Accept Bet</button>
-						</div>
+		<div class="makeBet">
+			<BetInputs
+				bind:netWinAmount
+				bind:betAmount
+			/>
+			{#if netWinAmount && winChance}
+				<div transition:fade|local>
+					<div transition:slide|local>
+						<WinChancePreview {winChance} {payAmount} />
+						<button on:click={acceptBet}>Accept Bet</button>
 					</div>
-				{/if}
-			</div>
-		{:else}
+				</div>
+			{/if}
+		</div>
+		{#if betAccepted}
 			<div transition:slide|local>
 				<div transition:fade|local>
-					<Overview
-						{winChance}
-						{payAmount}
-						{betAmount}
-					/>
+					<div class="payment">
+						<h4>Pay {betAmount} to</h4>
+						<code>bc1testtesttesttesttesttesttesttesttesttes</code>
+					</div>
 					<button on:click={unacceptBet}>Go back</button>
+					<button on:click={()=>{}}>Simulate Payment</button>
 				</div>
 			</div>
 		{/if}
@@ -114,6 +112,7 @@ import ServerPlayground from '../components/ServerPlayground.svelte';
 		box-sizing: border-box;
 		width: 100%;
 		min-height: 100vh;
+		--winColorLight: lightgreen;
 	}
 	#body {
 		width: 100%;
@@ -133,4 +132,6 @@ import ServerPlayground from '../components/ServerPlayground.svelte';
 		padding: 0.5em;
 		font-size: 1em;
 	}
+	.payment {display: grid;}
+	code {font-size: 0.7em;}
 </style>
