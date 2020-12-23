@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { onMount } from 'svelte';
-import IfContainerSlideFade from '../components/IfContainerSlideFade.svelte';
+import If from '../components/If.svelte';
 import InputNumber from '../components/InputNumber.svelte';
 import ServerPlayground from '../components/ServerPlayground.svelte';
 import WinChance from '../components/WinChance.svelte';
@@ -70,50 +70,37 @@ import WinChance from '../components/WinChance.svelte';
 	<div id="body">
 		<h1>Bet Up!</h1>
 		<div class="makeBet">
-			<IfContainerSlideFade
-				if_={!betAccepted}
-				id="betInputs"
-			>
-				<IfContainerSlideFade
-					if_={isMounted}
-				>
+			<If _={!betAccepted} id="betInputs">
+				<If _={isMounted}>
 					<InputNumber
 						bind:value={netWinAmount}
 						label="How much you'd like to win?"
 						autofocus
 						min="0"
 					/>
-				</IfContainerSlideFade>
-				<IfContainerSlideFade
-					if_={netWinAmount}
-				>
+				</If>
+				<If _={netWinAmount}>
 					<InputNumber
 						bind:value={betAmount}
 						label="How much you'd like to bet?"
 						min="0"
 					/>
-				</IfContainerSlideFade>
-			</IfContainerSlideFade>
-			<IfContainerSlideFade
-				if_={netWinAmount && winChance}
-			>
+				</If>
+			</If>
+			<If _={netWinAmount && winChance}>
 				<WinChance {winChance} {payAmount} />
-				<IfContainerSlideFade
-					if_={!betAccepted}
-				>
+				<If _={!betAccepted}>
 					<button id="acceptBet" on:click={acceptBet}>Accept Bet</button>
-				</IfContainerSlideFade>
-			</IfContainerSlideFade>
-			<IfContainerSlideFade
-				if_={betAccepted}
-			>
+				</If>
+			</If>
+			<If _={betAccepted}>
 				<div class="payment">
 					<h4>Pay {betAmount}$ to</h4>
 					<code>bc1testtesttesttesttesttesttesttesttesttes</code>
 				</div>
 				<button on:click={unacceptBet}>Go back</button>
 				<button on:click={()=>{}}>Simulate Payment</button>
-			</IfContainerSlideFade>
+			</If>
 		</div>
 	</div>
 </div>

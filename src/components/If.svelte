@@ -1,10 +1,14 @@
 <script lang="ts">
 import { fade, slide } from "svelte/transition";
 
-    export let if_: boolean | number;
+/**
+ * This component works like an `{#if ...}` statement,
+ * but with built-in transitions, fade and slide
+ */
+    export let _: boolean | number;
 </script>
 
-{#if if_}
+{#if _}
     <div transition:fade|local>
         <div transition:slide|local {...$$restProps}>
             <slot/>
