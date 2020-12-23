@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { onMount } from 'svelte';
+import { goto } from '@sapper/app';
 import If from '../components/If.svelte';
 import InputNumber from '../components/InputNumber.svelte';
 import ServerPlayground from '../components/ServerPlayground.svelte';
@@ -62,6 +63,11 @@ import WinChance from '../components/WinChance.svelte';
 	let betAccepted=false;
 	function acceptBet() {betAccepted=true;}
 	function unacceptBet() {betAccepted=false;}
+
+	function simulatePayment () {
+		const hasWon = (winChance > Math.random());
+		goto(`/result?hasWon=${hasWon}`);
+	}
 </script>
 
 
@@ -99,7 +105,7 @@ import WinChance from '../components/WinChance.svelte';
 					<code>bc1testtesttesttesttesttesttesttesttesttes</code>
 				</div>
 				<button on:click={unacceptBet}>Go back</button>
-				<button on:click={()=>{}}>Simulate Payment</button>
+				<button on:click={simulatePayment}>Simulate Payment</button>
 			</If>
 		</div>
 	</div>
