@@ -101,14 +101,14 @@ import WinChance from '../components/WinChance.svelte';
 				<IfContainerSlideFade
 					if_={!betAccepted}
 				>
-					<button on:click={acceptBet}>Accept Bet</button>
+					<button id="acceptBet" on:click={acceptBet}>Accept Bet</button>
 				</IfContainerSlideFade>
 			</IfContainerSlideFade>
 			<IfContainerSlideFade
 				if_={betAccepted}
 			>
 				<div class="payment">
-					<h4>Pay {betAmount} to</h4>
+					<h4>Pay {betAmount}$ to</h4>
 					<code>bc1testtesttesttesttesttesttesttesttesttes</code>
 				</div>
 				<button on:click={unacceptBet}>Go back</button>
@@ -164,6 +164,10 @@ import WinChance from '../components/WinChance.svelte';
 		padding: 0.5em;
 		font-size: 1em;
 		margin: 1em;
+	}
+	button#acceptBet {
+		width: 100%;
+		margin: 1em 0;
 	}
 	.payment {
 		display: grid;

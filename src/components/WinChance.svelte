@@ -20,7 +20,7 @@ import ProgressBar from "./ProgressBar.svelte";
     <ProgressBar value={$winChanceTweened}>
         <span>{getPercentageString($winChanceTweened)}</span>
     </ProgressBar>
-    <span>We'd pay {payAmount}</span>
+    <span>We'd pay {payAmount}$</span>
 </div>
 
 <style>
