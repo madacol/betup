@@ -13,7 +13,7 @@ import WinChance from '../components/WinChance.svelte';
 	/**
 	 * User inputs
 	 */
-	let netWinAmount: number;
+	let winAmount: number;
 	let betAmount: number;
 
 	/**
@@ -32,13 +32,13 @@ import WinChance from '../components/WinChance.svelte';
 	/**
 	 * Update calculations
 	 */
-	$: payAmount = netWinAmount+betAmount;
+	$: payAmount = winAmount+betAmount;
 	$: idealWinChance = betAmount/payAmount;
 	$: fairWinChance = idealWinChance * (1-profitPercent);
 
 	let maxWinChance: number;
 	$: {
-		let repeatedBetsCapacity = availableCapital / (netWinAmount);
+		let repeatedBetsCapacity = availableCapital / (winAmount);
 		maxWinChance = maxRiskChance ** (1/repeatedBetsCapacity);
 	}
 	$: maxWinChanceReached = fairWinChance > maxWinChance;
@@ -51,7 +51,7 @@ import WinChance from '../components/WinChance.svelte';
 		/**
 		 * Put a limit to the betAmount when this condition happens
 		 */
-		// betAmount = maxWinChance*netWinAmount / (1-profitPercent);
+		// betAmount = maxWinChance*winAmount / (1-profitPercent);
 	} else {
 		winChance = fairWinChance;
 		realProfitPercent = profitPercent;
@@ -79,13 +79,13 @@ import WinChance from '../components/WinChance.svelte';
 			<If _={!betAccepted} id="betInputs">
 				<If _={isMounted}>
 					<InputNumber
-						bind:value={netWinAmount}
+						bind:value={winAmount}
 						label="How much you'd like to win?"
 						autofocus
 						min="0"
 					/>
 				</If>
-				<If _={netWinAmount}>
+				<If _={winAmount}>
 					<InputNumber
 						bind:value={betAmount}
 						label="How much you'd like to bet?"
@@ -93,7 +93,7 @@ import WinChance from '../components/WinChance.svelte';
 					/>
 				</If>
 			</If>
-			<If _={netWinAmount && winChance}>
+			<If _={winAmount && winChance}>
 				<WinChance {winChance} {payAmount} />
 				<If _={!betAccepted}>
 					<button id="acceptBet" on:click={acceptBet}>Accept Bet</button>
