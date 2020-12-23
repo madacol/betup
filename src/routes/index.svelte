@@ -3,16 +3,24 @@
 </svelte:head>
 
 <script lang="ts">
+import { onMount } from 'svelte';
+
 import { fade, slide } from 'svelte/transition';
-import BetInputs from '../components/BetInputs.svelte';
+import InputNumber from '../components/InputNumber.svelte';
 import ServerPlayground from '../components/ServerPlayground.svelte';
-import WinChancePreview from '../components/WinChancePreview.svelte';
+import WinChance from '../components/WinChance.svelte';
 
 	/**
 	 * User inputs
 	 */
 	let netWinAmount: number;
 	let betAmount: number;
+
+	/**
+	 * Trigger fade-in transition on mounting
+	 */
+	let isMounted = false;
+	onMount(()=>isMounted=true)
 
 	/**
 	 * Server parameters
@@ -63,31 +71,60 @@ import WinChancePreview from '../components/WinChancePreview.svelte';
 	<div id="body">
 		<h1>Bet Up!</h1>
 		<div class="makeBet">
-			<BetInputs
-				bind:netWinAmount
-				bind:betAmount
-			/>
+			{#if !betAccepted}
+				<div transition:fade|local>
+					<div class="betInputs" transition:slide|local>
+						{#if isMounted}
+							<div transition:fade|local>
+								<div transition:slide|local>
+									<InputNumber
+										bind:value={netWinAmount}
+										label="How much you'd like to win?"
+										autofocus
+										min="0"
+									/>
+								</div>
+							</div>
+						{/if}
+						{#if netWinAmount}
+							<div transition:fade|local>
+								<div transition:slide|local>
+									<InputNumber
+										bind:value={betAmount}
+										label="How much you'd like to bet?"
+										min="0"
+									/>
+								</div>
+							</div>
+						{/if}
+					</div>
+				</div>
+			{/if}
 			{#if netWinAmount && winChance}
 				<div transition:fade|local>
 					<div transition:slide|local>
-						<WinChancePreview {winChance} {payAmount} />
-						<button on:click={acceptBet}>Accept Bet</button>
+						<WinChance {winChance} {payAmount} />
+						{#if !betAccepted}
+							<div class="betInputs" transition:slide|local>
+								<button on:click={acceptBet}>Accept Bet</button>
+							</div>
+						{/if}
+					</div>
+				</div>
+			{/if}
+			{#if betAccepted}
+				<div transition:fade|local>
+					<div transition:slide|local>
+						<div class="payment">
+							<h4>Pay {betAmount} to</h4>
+							<code>bc1testtesttesttesttesttesttesttesttesttes</code>
+						</div>
+						<button on:click={unacceptBet}>Go back</button>
+						<button on:click={()=>{}}>Simulate Payment</button>
 					</div>
 				</div>
 			{/if}
 		</div>
-		{#if betAccepted}
-			<div transition:slide|local>
-				<div transition:fade|local>
-					<div class="payment">
-						<h4>Pay {betAmount} to</h4>
-						<code>bc1testtesttesttesttesttesttesttesttesttes</code>
-					</div>
-					<button on:click={unacceptBet}>Go back</button>
-					<button on:click={()=>{}}>Simulate Payment</button>
-				</div>
-			</div>
-		{/if}
 	</div>
 </div>
 
@@ -106,12 +143,14 @@ import WinChancePreview from '../components/WinChancePreview.svelte';
 	#screenSize {
 		padding: 2em;
 		display: grid;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: stretch;
 		text-align: center;
 		box-sizing: border-box;
 		width: 100%;
 		min-height: 100vh;
+		--winColor: green;
+		--loseColor: gray;
 		--winColorLight: lightgreen;
 		--loseColorLight: lightgray;
 	}
@@ -124,15 +163,21 @@ import WinChancePreview from '../components/WinChancePreview.svelte';
 	.makeBet {
 		display: grid;
 		align-items: center;
-		grid-template-rows: 1fr 1fr auto;
-		gap: 2em;
 		transition-duration: 1s;
 	}
+	.betInputs {
+		display: grid;
+		gap: 2em;
+		margin-bottom: 2em;
+	}
 	button {
-		margin: 1em;
 		padding: 0.5em;
 		font-size: 1em;
+		margin: 1em;
 	}
-	.payment {display: grid;}
+	.payment {
+		display: grid;
+		margin-top: 2em;
+	}
 	code {font-size: 0.7em;}
 </style>
