@@ -2,6 +2,18 @@
 	<title>Bet Up!</title>
 </svelte:head>
 
+<script lang="ts" context="module">
+    export async function preload(page) {
+        console.log(page)
+        const { winAmount, betAmount } = page.query;
+
+        return {
+			winAmount: Number(winAmount),
+			betAmount: Number(betAmount),
+		};
+}
+</script>
+
 <script lang="ts">
 import { onMount } from 'svelte';
 import { goto } from '@sapper/app';
@@ -13,8 +25,8 @@ import WinChance from '../components/WinChance.svelte';
 	/**
 	 * User inputs
 	 */
-	let winAmount: number;
-	let betAmount: number;
+	export let winAmount: number;
+	export let betAmount: number;
 
 	/**
 	 * Trigger fade-in transition on mounting
@@ -56,6 +68,18 @@ import WinChance from '../components/WinChance.svelte';
 		winChance = fairWinChance;
 		realProfitPercent = profitPercent;
 	}
+
+	/**
+	 * Update query parameters
+	 */
+	let updateQueryParameter = (a,b)=>{};
+	$: updateQueryParameter(winAmount, betAmount);
+	onMount(()=>{
+		updateQueryParameter = (winAmount, betAmount) => {
+			const url = window.location.pathname + `?winAmount=${winAmount}&betAmount=${betAmount}`;
+			history.replaceState({id:0}, '', url); // `{id:0}` is a workaround to a sapper bug https://github.com/sveltejs/sapper/issues/791
+		}
+	})
 
 	/**
 	 * Bet management

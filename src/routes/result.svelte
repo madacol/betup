@@ -37,6 +37,7 @@ import Loader from "../components/Loader.svelte";
         {:else}
             <h1>You lost!</h1>
             😟
+            <button on:click={()=>history.back()}>Try Again!</button>
         {/if}
     {/await}
 </div>
