@@ -66,7 +66,7 @@ import WinChance from '../components/WinChance.svelte';
 
 	function simulatePayment () {
 		const hasWon = (winChance > Math.random());
-		goto(`/result?hasWon=${hasWon}`);
+		goto(`/result?hasWon=${hasWon}&payAmount=${payAmount}`);
 	}
 </script>
 
