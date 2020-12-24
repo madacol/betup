@@ -76,7 +76,11 @@ import WinChance from '../components/WinChance.svelte';
 	$: updateQueryParameter(winAmount, betAmount);
 	onMount(()=>{
 		updateQueryParameter = (winAmount, betAmount) => {
-			const url = window.location.pathname + `?winAmount=${winAmount}&betAmount=${betAmount}`;
+			const queryStrings = [];
+			if (winAmount) queryStrings.push(`winAmount=${winAmount}`);
+			if (betAmount) queryStrings.push(`betAmount=${betAmount}`);
+			const queryString = (queryStrings.length > 0) ? `?${queryStrings.join('&')}` : ""
+			const url = window.location.pathname + queryString;
 			history.replaceState({id:0}, '', url); // `{id:0}` is a workaround to a sapper bug https://github.com/sveltejs/sapper/issues/791
 		}
 	})
